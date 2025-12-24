@@ -12,83 +12,94 @@ description: |
 
 # Porkbun DNS Manager
 
-Manage Porkbun domains via direct API calls using curl.
+Manage Porkbun domains via the `porkbun.py` script.
 
-## Authentication
+## Script Location
 
-Credentials are stored in `~/.claude/skills/porkbun-skill/.env`
-
-**Important:** Source and run curl in the same command (env vars don't persist across separate commands):
-
-```bash
-source ~/.claude/skills/porkbun-skill/.env && curl ...
+```
+~/.claude/skills/porkbun-skill/scripts/porkbun.py
 ```
 
-## Base URL
-
-`https://api.porkbun.com/api/json/v3`
+Credentials are loaded automatically from `~/.claude/skills/porkbun-skill/.env`
 
 ## Quick Reference
 
 ### Test Connection
 ```bash
-source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/ping" \
-  -H "Content-Type: application/json" \
-  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py ping
 ```
 
 ### List All Domains
 ```bash
-source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/domain/listAll" \
-  -H "Content-Type: application/json" \
-  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py domains
 ```
 
-### Get DNS Records
+### Check Domain Availability
 ```bash
-source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/retrieve/{domain}" \
-  -H "Content-Type: application/json" \
-  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py check example.com
+```
+
+### List DNS Records
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns list example.com
 ```
 
 ### Create DNS Record
 ```bash
-source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/create/{domain}" \
-  -H "Content-Type: application/json" \
-  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\",\"name\":\"{subdomain}\",\"type\":\"{A|AAAA|CNAME|MX|TXT|NS|SRV}\",\"content\":\"{value}\",\"ttl\":\"600\"}"
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns create <domain> <type> <content> [name] [ttl] [prio]
+
+# Examples:
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns create example.com A 192.168.1.1 www 600
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns create example.com CNAME target.com blog 600
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns create example.com MX mail.example.com "" 600 10
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns create example.com TXT "v=spf1 include:_spf.google.com ~all" "" 600
 ```
 
-### Edit DNS Record by ID
+### Edit DNS Record
 ```bash
-source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/edit/{domain}/{id}" \
-  -H "Content-Type: application/json" \
-  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\",\"name\":\"{subdomain}\",\"type\":\"{type}\",\"content\":\"{value}\",\"ttl\":\"600\"}"
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns edit <domain> <id> <type> <content> [name] [ttl] [prio]
 ```
 
-### Delete DNS Record by ID
+### Delete DNS Record
 ```bash
-source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/delete/{domain}/{id}" \
-  -H "Content-Type: application/json" \
-  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns delete example.com 123456789
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dns delete-type example.com A www
 ```
 
-## Detailed Endpoints
+### Nameservers
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py ns get example.com
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py ns update example.com ns1.cloudflare.com ns2.cloudflare.com
+```
 
-See [references/endpoints.md](references/endpoints.md) for complete API reference including:
-- Domain management (nameservers, availability, pricing)
-- Glue records (for custom nameservers)
-- Advanced DNS filtering (by name/type)
-- SSL certificate retrieval
-- DNSSEC management
-- URL forwarding
+### URL Forwarding
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py forwards list example.com
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py forward add example.com https://newsite.com "" permanent
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py forward delete example.com 123456
+```
 
-## Workflow
+### SSL Certificate
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py ssl example.com
+```
 
-1. Run `source ~/.claude/skills/porkbun-skill/.env && curl ...` (source + command in one line)
-2. Test connection with ping endpoint
-3. List domains to confirm access
-4. Perform DNS operations as needed
-5. Verify changes by retrieving records
+### Glue Records
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py glue list example.com
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py glue create example.com ns1 192.168.1.1
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py glue delete example.com ns1
+```
+
+### DNSSEC
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py dnssec list example.com
+```
+
+### Help
+```bash
+python3 ~/.claude/skills/porkbun-skill/scripts/porkbun.py help
+```
 
 ## Common Record Types
 
@@ -103,8 +114,7 @@ See [references/endpoints.md](references/endpoints.md) for complete API referenc
 
 ## Notes
 
-- All endpoints use POST method
+- Script loads .env automatically - no need to source
 - TTL is in seconds (600 = 10 minutes)
-- For MX records, include `prio` field
-- Subdomain `name` can be empty for root domain (@)
-- Response includes `status: "SUCCESS"` or error message
+- For MX records, set name to "" and add prio as last argument
+- Response is JSON with `status: "SUCCESS"` or `status: "ERROR"`
