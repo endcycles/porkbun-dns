@@ -23,14 +23,73 @@ export PORKBUN_API_KEY=pk1_your_api_key_here
 export PORKBUN_SECRET_API_KEY=sk1_your_secret_key_here
 ```
 
-## Usage
+## Usage Examples
 
-Once installed, ask Claude Code to manage your Porkbun domains:
+Once installed, ask Claude Code to manage your Porkbun domains naturally:
 
-- "List my Porkbun domains"
-- "Show DNS records for example.com"
-- "Add an A record for www.example.com pointing to 1.2.3.4"
-- "Delete the CNAME record for blog.example.com"
+### Domain Management
+```
+"List all my Porkbun domains"
+"Check if coolstartup.io is available"
+"What nameservers is example.com using?"
+"Update example.com to use Cloudflare nameservers"
+```
+
+### DNS Records
+```
+"Show all DNS records for example.com"
+"Add an A record for www.example.com pointing to 192.168.1.1"
+"Create a CNAME record pointing blog.example.com to my-blog.netlify.app"
+"Set up MX records for example.com to use Google Workspace"
+"Add a TXT record for domain verification: google-site-verification=abc123"
+"Delete the A record for old.example.com"
+"Change the IP for api.example.com to 10.0.0.5"
+```
+
+### Batch Operations
+```
+"Set up DNS for my new site: A record for @ pointing to 1.2.3.4, CNAME for www pointing to @, and MX records for Google"
+"Add A records for app, api, and cdn subdomains all pointing to 192.168.1.100"
+"Delete all TXT records for example.com"
+"Show me all CNAME records across all my domains"
+```
+
+### Email Setup
+```
+"Configure example.com for Google Workspace email"
+"Add SPF and DKIM records for example.com"
+"Set up MX records with priority 10 for mail.example.com"
+```
+
+### SSL & Security
+```
+"Get the SSL certificate for example.com"
+"Show DNSSEC status for example.com"
+"Enable DNSSEC for example.com"
+```
+
+### URL Forwarding
+```
+"Redirect old-domain.com to new-domain.com permanently"
+"Set up a 302 redirect from promo.example.com to example.com/summer-sale"
+"Forward all subdomains of redirect.example.com to example.com"
+"List all URL forwards for example.com"
+```
+
+### Glue Records (Custom Nameservers)
+```
+"Set up glue records for ns1.example.com and ns2.example.com"
+"Update the IP for ns1.example.com to 10.0.0.1"
+"Show glue records for example.com"
+```
+
+### Investigation & Audit
+```
+"What's the TTL on all my A records for example.com?"
+"Find all records pointing to 192.168.1.1 across my domains"
+"List all domains expiring in the next 30 days"
+"Compare DNS records between example.com and example.net"
+```
 
 ## API Endpoints & Example Commands
 
