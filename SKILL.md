@@ -1,5 +1,5 @@
 ---
-name: porkbun-dns
+name: porkbun-skill
 description: |
   Manage Porkbun domains and DNS records via API. Use when user asks to:
   - List, check, or manage domains
@@ -16,12 +16,13 @@ Manage Porkbun domains via direct API calls using curl.
 
 ## Authentication
 
-Read credentials from skill directory:
-```bash
-source ~/.claude/skills/porkbun-skill/.env
-```
+Credentials are stored in `~/.claude/skills/porkbun-skill/.env`
 
-All API calls use POST with JSON body containing `apikey` and `secretapikey`.
+**Important:** Source and run curl in the same command (env vars don't persist across separate commands):
+
+```bash
+source ~/.claude/skills/porkbun-skill/.env && curl ...
+```
 
 ## Base URL
 
@@ -31,56 +32,42 @@ All API calls use POST with JSON body containing `apikey` and `secretapikey`.
 
 ### Test Connection
 ```bash
-curl -sX POST "https://api.porkbun.com/api/json/v3/ping" \
+source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/ping" \
   -H "Content-Type: application/json" \
   -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
 ```
 
 ### List All Domains
 ```bash
-curl -sX POST "https://api.porkbun.com/api/json/v3/domain/listAll" \
+source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/domain/listAll" \
   -H "Content-Type: application/json" \
   -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
 ```
 
 ### Get DNS Records
 ```bash
-curl -sX POST "https://api.porkbun.com/api/json/v3/dns/retrieve/{domain}" \
+source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/retrieve/{domain}" \
   -H "Content-Type: application/json" \
   -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
 ```
 
 ### Create DNS Record
 ```bash
-curl -sX POST "https://api.porkbun.com/api/json/v3/dns/create/{domain}" \
+source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/create/{domain}" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"apikey\":\"$PORKBUN_API_KEY\",
-    \"secretapikey\":\"$PORKBUN_SECRET_API_KEY\",
-    \"name\":\"{subdomain}\",
-    \"type\":\"{A|AAAA|CNAME|MX|TXT|NS|SRV}\",
-    \"content\":\"{value}\",
-    \"ttl\":\"600\"
-  }"
+  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\",\"name\":\"{subdomain}\",\"type\":\"{A|AAAA|CNAME|MX|TXT|NS|SRV}\",\"content\":\"{value}\",\"ttl\":\"600\"}"
 ```
 
 ### Edit DNS Record by ID
 ```bash
-curl -sX POST "https://api.porkbun.com/api/json/v3/dns/edit/{domain}/{id}" \
+source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/edit/{domain}/{id}" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"apikey\":\"$PORKBUN_API_KEY\",
-    \"secretapikey\":\"$PORKBUN_SECRET_API_KEY\",
-    \"name\":\"{subdomain}\",
-    \"type\":\"{type}\",
-    \"content\":\"{value}\",
-    \"ttl\":\"600\"
-  }"
+  -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\",\"name\":\"{subdomain}\",\"type\":\"{type}\",\"content\":\"{value}\",\"ttl\":\"600\"}"
 ```
 
 ### Delete DNS Record by ID
 ```bash
-curl -sX POST "https://api.porkbun.com/api/json/v3/dns/delete/{domain}/{id}" \
+source ~/.claude/skills/porkbun-skill/.env && curl --silent --request POST "https://api.porkbun.com/api/json/v3/dns/delete/{domain}/{id}" \
   -H "Content-Type: application/json" \
   -d "{\"apikey\":\"$PORKBUN_API_KEY\",\"secretapikey\":\"$PORKBUN_SECRET_API_KEY\"}"
 ```
@@ -97,7 +84,7 @@ See [references/endpoints.md](references/endpoints.md) for complete API referenc
 
 ## Workflow
 
-1. Source credentials: `source ~/.claude/skills/porkbun-skill/.env`
+1. Run `source ~/.claude/skills/porkbun-skill/.env && curl ...` (source + command in one line)
 2. Test connection with ping endpoint
 3. List domains to confirm access
 4. Perform DNS operations as needed
