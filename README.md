@@ -1,6 +1,8 @@
-# Porkbun DNS Skill
+# Porkbun Skill
 
 A Claude Code skill for managing Porkbun domains and DNS records.
+
+Inspired by [porkbun-mcp](https://github.com/myroslavtryhubets/porkbun-mcp) - rebuilt as a lightweight skill.
 
 ## How It Works
 
@@ -18,6 +20,30 @@ Claude Code: Reports result to you
 
 No Docker. No MCP server. No middleware. Just direct API calls using curl.
 
+## Why a Skill Instead of MCP?
+
+| Approach | Token Overhead | Setup |
+|----------|----------------|-------|
+| **This skill** | ~500 tokens | Just .env file |
+| **MCP Server** | 10,000-17,000+ tokens | Docker, process management |
+
+MCP servers add significant token overhead:
+- Each server consumes **10K-17K tokens** for tool definitions
+- A 5-server setup burns **55K+ tokens** before you start
+- That's up to 1/3 of Claude's context window gone immediately
+
+Direct API calls via curl are leaner:
+- SKILL.md loads only when triggered
+- No persistent process running
+- No tool definitions eating context
+- Curl runs, returns result, done
+
+**Use MCP for:** Complex stateful integrations (browser automation, databases)
+
+**Use Skills for:** Simple REST APIs like Porkbun
+
+Sources: [Anthropic Engineering](https://www.anthropic.com/engineering/claude-code-best-practices), [MCP Context Optimization](https://scottspence.com/posts/optimising-mcp-server-context-usage-in-claude-code)
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/download) CLI
@@ -28,8 +54,8 @@ No Docker. No MCP server. No middleware. Just direct API calls using curl.
 
 ```bash
 cd ~/.claude/skills
-git clone https://github.com/endcycles/porkbun-dns.git
-cd porkbun-dns
+git clone https://github.com/endcycles/porkbun-skill.git
+cd porkbun-skill
 cp .env.example .env
 ```
 
@@ -114,7 +140,7 @@ All commands use the Porkbun API v3. Base URL: `https://api.porkbun.com/api/json
 ### Authentication
 
 ```bash
-source ~/.claude/skills/porkbun-dns/.env
+source ~/.claude/skills/porkbun-skill/.env
 ```
 
 ---

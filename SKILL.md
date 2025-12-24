@@ -18,7 +18,7 @@ Manage Porkbun domains via direct API calls using curl.
 
 Read credentials from skill directory:
 ```bash
-source ~/.claude/skills/porkbun-dns/.env
+source ~/.claude/skills/porkbun-skill/.env
 ```
 
 All API calls use POST with JSON body containing `apikey` and `secretapikey`.
@@ -97,7 +97,7 @@ See [references/endpoints.md](references/endpoints.md) for complete API referenc
 
 ## Workflow
 
-1. Source credentials: `source ~/.claude/skills/porkbun-dns/.env`
+1. Source credentials: `source ~/.claude/skills/porkbun-skill/.env`
 2. Test connection with ping endpoint
 3. List domains to confirm access
 4. Perform DNS operations as needed
